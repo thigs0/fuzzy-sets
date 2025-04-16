@@ -3,6 +3,14 @@
  * [Fuzzy sets](#fuzzy-sets)
  * [Plotting](#plotting)
 
+**To-Do**
+- implementar Cauchyset
+- implementar tnorma( DeMorgan tripdrástica, produto e soma probabilista, min max ) obs: qualquer definição de uma tnorma -> automaticamente no t-conorma
+- implementar takagi-sugeno, mandanam
+  -> dados de saída são em dataframe com todas as variáveis 
+
+
+
 # fuzzysets
 **fuzzysets** is a simple Python package that is well suited for interactive experiments with fundamental concepts in fuzzy set theory.  
 
