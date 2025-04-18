@@ -16,8 +16,8 @@
 
 # Installation
 The package is available on [PYPI](https://pypi.org/project/fuzzysets/) and can be installed with pip:  
-`pip install fuzzysets`  
-
+```pip install fuzzysets```  
+```pip install git+https://github.com/thigs0/fuzzysets.git```  
 # Notation
 In the following sections, code snippets will be highlighted like this.  
 
