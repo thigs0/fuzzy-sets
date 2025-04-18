@@ -4,8 +4,16 @@
  * [Plotting](#plotting)
 
 **To-Do**
-- implementar Cauchyset
-- implementar tnorma( DeMorgan tripdrástica, produto e soma probabilista, min max ) obs: qualquer definição de uma tnorma -> automaticamente no t-conorma
+- implementar Cauchyset [Done]
+  1. Try with many codes []
+  2. create a code with example at README []
+- implementar tnorma( DeMorgan tripdrástica, produto e soma probabilista, min max ) obs: qualquer definição de uma tnorma -> automaticamente no t-conorma [Done]
+  1. Verify the Tnorm product
+  2. Create code example of Tnorm product
+  3. Verify the Tconorm probabilistic sum
+  4. Create code example of probabilistic sum
+  5. verify the Tnorm min max
+  6. Create code with Tnorm min and Tconorm max
 - implementar takagi-sugeno, mandanam
   -> dados de saída são em dataframe com todas as variáveis 
 
