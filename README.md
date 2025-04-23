@@ -92,26 +92,26 @@ TriangularFuzzyNumber(l=9.0, n=10.0, r=12.8)
 TriangularFuzzyNumber(l=8.0, n=10.6, r=12.0)
 ```
 
-Since the order of the arguments may seem a bit odd, a TFN can also be created from a tuple:  
+We can also obtain the alpha cut of a TFN:  
 
 ```python
->>> tfn = fs.TFN.from_tuple((0, 1, 2.5))
->>> tfn
-TriangularFuzzyNumber(l=0.0, n=1.0, r=2.5)
+>>> n
+TriangularFuzzyNumber(l=1.0, n=2.0, r=4.0)
+>>> n.alpha_cut
+AlphaCut(1.0 + alpha * 1.0, 4.0 + alpha * -2.0)
 ```
 
-We can call the membership function of the TFN like this:  
+It can be converted to a more user-friendly string than the one above and can compute the interval for a fixed alpha:  
 
 ```python
->>> tfn.mu(-1)
-0
->>> tfn.mu(0.5)
-0.5
->>> tfn.mu(1)
-1.0
->>> tfn.mu(2.)
-0.3333333333333333
+>>> cut = n.alpha_cut
+>>> str(cut)
+'[1.0 + alpha * 1.0, 4.0 + alpha * -2.0]'
+>>> cut.for_alpha(0.5)
+(1.5, 3.0)
 ```
+
+
 
 ## Cauchy fuzzy Set
 
@@ -164,60 +164,6 @@ False
 True
 >>> n != m
 True
-```
-
-We can also obtain the alpha cut of a TFN:  
-
-```python
->>> n
-TriangularFuzzyNumber(l=1.0, n=2.0, r=4.0)
->>> n.alpha_cut
-AlphaCut(1.0 + alpha * 1.0, 4.0 + alpha * -2.0)
-```
-
-It can be converted to a more user-friendly string than the one above and can compute the interval for a fixed alpha:  
-
-```python
->>> cut = n.alpha_cut
->>> str(cut)
-'[1.0 + alpha * 1.0, 4.0 + alpha * -2.0]'
->>> cut.for_alpha(0.5)
-(1.5, 3.0)
-```
-
-TFNs are also hashable which means that we can store them in sets or use them as mapping keys:  
-
-```python
->>> {fs.TFN(i) for i in range(2)}
-{TriangularFuzzyNumber(l=0.0, n=1.0, r=2.0), TriangularFuzzyNumber(l=-1.0, n=0.0, r=1.0)}
->>> mapping = {fs.TFN(): "zero", fs.TFN(1): "one"}
->>> mapping
-{TriangularFuzzyNumber(l=-1.0, n=0.0, r=1.0): 'zero', TriangularFuzzyNumber(l=0.0, n=1.0, r=2.0): 'one'}
-```
-
-We can also obtain the basic attributes of a TFN:  
-
-```python
->>> n
-TriangularFuzzyNumber(l=1.0, n=2.0, r=4.0)
->>> n.left
-1.0
->>> n.peak
-2.0
->>> n.right
-4.0
-```
-
-TFNs are also iterable, their attributes are yielded in order from left to right. This means that we can unpack them just like tuples: 
-
-```python
->>> a, b, c = n
->>> a
-1.0
->>> b
-2.0
->>> c
-4.0
 ```
 
 <a name="fuzzy-sets"></a>
