@@ -11,7 +11,7 @@ from numpy.polynomial.polynomial import Polynomial
 from fuzzysets import utils
 
 
-class TriangularFuzzyNumber:
+class TrapezoidFuzzyNumber:
     """
     Represents a triangular fuzzy number (TFN).
 
