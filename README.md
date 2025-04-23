@@ -58,6 +58,20 @@ We first need to import the **fuzzysets** package:
 The class is available through an alias - TFN. The default value of the class is 0:  
 
 ```python
+import matplotlib.pyplot as plt
+import numpy as np
+from tfn import TriangularFuzzyNumber as tfn
+
+plt.style.use('ggplot')
+a = tfn()
+b = tfn(3,2,4)
+plt.plot(x, a.mu(x), label="Triangular Fuzzy Set (a)", color="red")
+plt.plot(x, b.mu(x), label="Cauchy Fuzzy Set (b)", color="blue")
+x = np.linspace(-5,10,200)
+```
+
+![TriangularFuzzyNumber](./image/triangularfuzzy.png)
+```python
 >>> fs.TFN()
 TriangularFuzzyNumber(l=-1.0, n=0.0, r=1.0)
 ```
