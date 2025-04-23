@@ -116,7 +116,7 @@ plt.plot(x, a.mu(x), label="Cauchy Fuzzy Set (a)", color="red")
 plt.plot(x, b.mu(x), label="Cauchy Fuzzy Set (b)", color="blue")
 ```
 
-![CauchyFuzzyNumber][./image/cauchyset.png]
+![CauchyFuzzyNumber](./image/cauchyset.png)
 
 Arithmetic operations on TFNs can be done with the corresponding operators:  
 
