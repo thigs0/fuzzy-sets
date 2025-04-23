@@ -99,6 +99,25 @@ We can call the membership function of the TFN like this:
 0.3333333333333333
 ```
 
+## Cauchy fuzzy Set
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+import CauchyFuzzyNumber as cfn
+
+a = cfs(1,2,3)
+b = cfs(2,4,5)
+
+x = np.linspace(-5,10,200)
+plt.plot(x, a.mu(x))
+plt.style.use('ggplot')
+plt.plot(x, a.mu(x), label="Cauchy Fuzzy Set (a)", color="red")
+plt.plot(x, b.mu(x), label="Cauchy Fuzzy Set (b)", color="blue")
+```
+
+![CauchyFuzzyNumber][./image/cauchyset.png]
+
 Arithmetic operations on TFNs can be done with the corresponding operators:  
 
 ```python
