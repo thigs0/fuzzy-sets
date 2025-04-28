@@ -1,3 +1,8 @@
+import numpy as np
+from typing import Callable, List, Tuple
+from cauchyfuzzyset import CauchyFuzzySet
+from inference import MamdaniInference
+
 # Supondo que CauchyFuzzySet já foi importado
 
 # Define conjuntos fuzzy para saída

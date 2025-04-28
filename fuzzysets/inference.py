@@ -1,17 +1,18 @@
-import numpy as numpy
+import numpy as np
+from cauchyfuzzyset import CauchyFuzzySet
 
-class TakagiSugeno():
+class TakagiSugeno:
     """
     The TakagiSugeno use implementation of FuzzySet and Tnorm to calculate inference
 
     paramns
     rules: function that return np.array with values of activation  
     """
-    def __init__(self, rules:Callable, sets:list):
+    def __init__(self, rules:callable, sets:list):
         self.w = rules
         self.sets = sets
 
-    def inference(self, value:np.darray):
+    def inference(self, value:np.ndarray):
         return dp.dot(self.w(value), self.sets(value))/ np.sum(self.w(value))
 
 class Mandani():
@@ -21,11 +22,11 @@ class Mandani():
     paramns
     rules: function that return np.array with values of activation  
     """
-    def __init__(self, rules:Callable, sets:list):
+    def __init__(self, rules:callable, sets:list):
         self.w = rules
         self.sets = sets
 
-    def inference(self, value:np.darray, tnorm):
+    def inference(self, value:np.ndarray, tnorm):
         rules = self.w(value)
         sets = self.sets(value)
         #concatenar valor das tnormas
@@ -42,7 +43,7 @@ class MamdaniInference:
     def __init__(self):
         self.rules: List[Tuple[Callable[[float], float], CauchyFuzzySet]] = []
 
-    def add_rule(self, antecedent: Callable[[float], float], consequent: CauchyFuzzySet):
+    def add_rule(self, antecedent: Callable[[float], float], consequent):
         """
         Adiciona uma regra fuzzy.
 
