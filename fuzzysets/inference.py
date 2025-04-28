@@ -30,3 +30,50 @@ class Mandani():
         sets = self.sets(value)
         #concatenar valor das tnormas
         return dp.dot(self.w(value), self.sets(value))/ np.sum(self.w(value))
+import numpy as np
+from typing import Callable, List, Dict, Tuple
+
+
+class MamdaniInference:
+    """
+    Realiza inferência fuzzy do tipo Mamdani usando conjuntos fuzzy do tipo CauchyFuzzySet.
+    """
+
+    def __init__(self):
+        self.rules: List[Tuple[Callable[[float], float], CauchyFuzzySet]] = []
+
+    def add_rule(self, antecedent: Callable[[float], float], consequent: CauchyFuzzySet):
+        """
+        Adiciona uma regra fuzzy.
+
+        :param antecedent: função de pertinência (mu(x)) para a entrada
+        :param consequent: conjunto fuzzy do tipo CauchyFuzzySet como saída
+        """
+        self.rules.append((antecedent, consequent))
+
+    def infer(self, input_value: float, resolution: int = 1000) -> float:
+        """
+        Realiza a inferência Mamdani e retorna o valor defuzzificado.
+
+        :param input_value: valor numérico de entrada
+        :param resolution: número de pontos para amostragem na saída
+        :return: valor defuzzificado (saída)
+        """
+        universe = np.linspace(0, 10, resolution)
+        output_membership = np.zeros_like(universe)
+
+        for antecedent, consequent in self.rules:
+            degree = antecedent(input_value)  # grau de ativação
+            # Min (t-norma) entre grau da regra e a saída fuzzy
+            consequent_values = np.array([consequent.mu(x) for x in universe])
+            output_membership = np.fmax(output_membership, np.fmin(degree, consequent_values))
+
+        # Defuzzificação: centroide
+        numerator = np.sum(universe * output_membership)
+        denominator = np.sum(output_membership)
+
+        if denominator == 0:
+            return 0.0  # sem ativação
+
+        return numerator / denominator
+
