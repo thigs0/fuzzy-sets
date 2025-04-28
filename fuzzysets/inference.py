@@ -51,18 +51,19 @@ class MamdaniInference:
         """
         self.rules.append((antecedent, consequent))
 
-    def infer(self, input_value: float, resolution: int = 1000) -> float:
+    def infer(self, input_value: list, universe:np.ndarray) -> float:
         """
         Realiza a inferência Mamdani e retorna o valor defuzzificado.
 
-        :param input_value: valor numérico de entrada
+        :param input_value: va:wqlor numérico de entrada
         :param resolution: número de pontos para amostragem na saída
         :return: valor defuzzificado (saída)
         """
-        universe = np.linspace(0, 10, resolution)
+
         output_membership = np.zeros_like(universe)
 
         for antecedent, consequent in self.rules:
+            
             degree = antecedent(input_value)  # grau de ativação
             # Min (t-norma) entre grau da regra e a saída fuzzy
             consequent_values = np.array([consequent.mu(x) for x in universe])
