@@ -1,4 +1,10 @@
 import numpy as np
+from numpy import inf, minimum
+
+def AND(variables:List, fuzzy:List)
+    v = -inf
+    for i in range(len(x)-1):
+        v = minimum(v, fuzzy[i](variables[i]))
 
 class Tnorm():
     """

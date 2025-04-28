@@ -37,7 +37,6 @@ from typing import Callable, List, Dict, Tuple
 
 class MamdaniInference:
     """
-    Realiza inferência fuzzy do tipo Mamdani usando conjuntos fuzzy do tipo CauchyFuzzySet.
     """
 
     def __init__(self):

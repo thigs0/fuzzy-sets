@@ -10,7 +10,6 @@ from numpy.polynomial.polynomial import Polynomial
 
 from fuzzysets import utils
 
-
 class TriangularFuzzyNumber:
     """
     Represents a triangular fuzzy number (TFN).
