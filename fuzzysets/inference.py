@@ -1,5 +1,6 @@
 import numpy as np
 from cauchyfuzzyset import CauchyFuzzySet
+from typing import Callable, List, Dict, Tuple
 
 class TakagiSugeno:
     """
@@ -15,24 +16,6 @@ class TakagiSugeno:
     def inference(self, value:np.ndarray):
         return dp.dot(self.w(value), self.sets(value))/ np.sum(self.w(value))
 
-class Mandani():
-    """
-    The TakagiSugeno use implementation of FuzzySet and Tnorm to calculate inference
-
-    paramns
-    rules: function that return np.array with values of activation  
-    """
-    def __init__(self, rules:callable, sets:list):
-        self.w = rules
-        self.sets = sets
-
-    def inference(self, value:np.ndarray, tnorm):
-        rules = self.w(value)
-        sets = self.sets(value)
-        #concatenar valor das tnormas
-        return dp.dot(self.w(value), self.sets(value))/ np.sum(self.w(value))
-import numpy as np
-from typing import Callable, List, Dict, Tuple
 
 
 class MamdaniInference:
