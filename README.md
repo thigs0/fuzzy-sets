@@ -159,7 +159,7 @@ plt.legend(loc="center left")
 plt.savefig('test.png', dpi=300)
 ```
 
-![CauchyFuzzyNumbertnorm](./image/tnorm_tconorm.png.png)
+![CauchyFuzzyNumbertnorm](./image/tnorm_tconorm.png)
 
 ## Mandani inference method
 
