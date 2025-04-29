@@ -102,16 +102,13 @@ class TriangularFuzzyNumber:
 
         :raises ValueError: if x is not a number.
         """
-        x = utils.to_float_if_int(x)
-        utils.verify_is_numeric(x)
 
-        return (
+        if (x > self.__l and x <= self.__n):
+            return (x - self.__l)/(self.__n - self.__l)
+        elif x > self.__n and x < self.__r:
+            return -(self.__r - x)/(self.__l - self.__n)
+        else:
             0
-            if (x < self.__l or x > self.__r)
-            else (x - self.__l) / (self.__n - self.__l)
-            if (self.__l <= x <= self.__n)
-            else (self.__r - x) / (self.__r - self.__n)
-        )
 
     def __add__(self, other: "TriangularFuzzyNumber") -> "TriangularFuzzyNumber":
         return self.__operation(other, op_name="_add")
