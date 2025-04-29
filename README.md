@@ -60,7 +60,7 @@ The class is available through an alias - TFN. The default value of the class is
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
-from tfn import TriangularFuzzyNumber as tfn
+from fuzzysets import TriangularFuzzyNumber as tfn
 
 plt.style.use('ggplot')
 a = tfn()
@@ -118,7 +118,7 @@ It can be converted to a more user-friendly string than the one above and can co
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
-import CauchyFuzzyNumber as cfn
+from fuzzysets import CauchyFuzzySet as cfs
 
 a = cfs(1,2,3)
 b = cfs(2,4,5)
@@ -168,10 +168,7 @@ plt.savefig('test.png', dpi=300)
 ```python
 import numpy as np
 from typing import Callable, List, Tuple
-from cauchyfuzzyset import CauchyFuzzySet
-from tfn import TriangularFuzzyNumber
-from tnorm import Tnorm, AND
-from inference import MamdaniInference
+from fuzzysets import CauchyFuzzySet, TriangularFuzzyNumber, Tnorm, AND, MamdaniInference
 
 #heavy of cloths
 ml = TriangularFuzzyNumber(0, -20, 20)
