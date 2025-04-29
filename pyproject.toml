@@ -1,3 +1,21 @@
+[project]
+name = "initfuzzy"                         # Nome do pacote
+version = "0.0.1"                          # Versão
+description = "Pacote de inferência fuzzy" # Descrição breve
+readme = "README.md"                      # Arquivo com descrição longa
+requires-python = ">=3.7"
+license = {text = "MIT"}                  # Licença (ex: MIT, Apache-2.0, etc.)
+
+authors = [
+  { name="Thiago Santos da Silva", email="tthiagosantos38@gmail.com" }
+]
+
+dependencies = [
+  "numpy",        
+  "scipy",
+  "matplotlib"
+]
+
 [build-system]
 requires = [
     "setuptools>=42",

@@ -1,0 +1,15 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+initfuzzy.egg-info/PKG-INFO
+initfuzzy.egg-info/SOURCES.txt
+initfuzzy.egg-info/dependency_links.txt
+initfuzzy.egg-info/requires.txt
+initfuzzy.egg-info/top_level.txt
+tests/test_continuous_fs.py
+tests/test_finite_fs.py
+tests/test_mandani.py
+tests/test_tfn.py
+tests/test_tnorm.py
+tests/test_utils.py
