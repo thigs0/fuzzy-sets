@@ -2,21 +2,46 @@ import numpy as np
 from cauchyfuzzyset import CauchyFuzzySet
 from typing import Callable, List, Dict, Tuple
 
-class TakagiSugeno:
+class TakagiSugenoInference:
     """
     The TakagiSugeno use implementation of FuzzySet and Tnorm to calculate inference
 
     paramns
     rules: function that return np.array with values of activation  
     """
-    def __init__(self, rules:callable, sets:list):
-        self.w = rules
-        self.sets = sets
+    def __init__(self):
+        self.rules: List[Tuple[Callable[[float], float], CauchyFuzzySet]] = []
 
-    def inference(self, value:np.ndarray):
-        return dp.dot(self.w(value), self.sets(value))/ np.sum(self.w(value))
+    def add_rule(self, antecedent: Callable[[float], float], consequent):
+        """
+        Adiciona uma regra fuzzy.
 
+        :param antecedent: função de pertinência (mu(x)) para a entrada
+        :param consequent: conjunto fuzzy do tipo CauchyFuzzySet como saída
+        """
+        self.rules.append((antecedent, consequent))
 
+    def infer(self, input_value: list, universe:np.ndarray) -> float:
+        """
+        Realiza a inferência Mamdani e retorna o valor defuzzificado.
+
+        :param input_value: va:wqlor numérico de entrada
+        :param resolution: número de pontos para amostragem na saída
+        :return: valor defuzzificado (saída)
+        """
+
+        output_membership = np.zeros_like(universe)
+
+        consequent_values = np.array([consequent(*input_value)])
+        W = np.zeros(len(consequent_values))
+        k=0
+        for antecedent, consequent in self.rules:
+            W[k] = antecedent(input_value)  # grau de ativação
+            k+=1
+        # Defuzzificação: centroide
+        numerator = np.dot(consequent_values, W)
+        W2 = np.dot(W, W)
+        return numerator/W2
 
 class MamdaniInference:
     """
