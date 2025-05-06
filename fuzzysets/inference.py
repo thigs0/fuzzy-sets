@@ -1,5 +1,5 @@
 import numpy as np
-from cauchyfuzzyset import CauchyFuzzySet
+from fuzzysets import CauchyFuzzySet
 from typing import Callable, List, Dict, Tuple
 
 class TakagiSugenoInference:

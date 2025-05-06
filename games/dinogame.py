@@ -2,6 +2,25 @@ import pygame
 import random
 import sys
 import time
+from fuzzysets import CauchyFuzzySet, TriangularFuzzyNumber, Tnorm, AND, MamdaniInference
+
+#first cactus
+fcactus_near= TriangularFuzzyNumber(100,110,90)
+
+#second cactus
+scactus_near = TriangularFuzzyNumber(100,110,90)
+
+#jump
+jump = TriangularFuzzyNumber(0, 1, -1)
+
+#activation
+w1 = AND([fcactus_near, scactus_near])
+
+# Sistema de inferência
+mi = MamdaniInference()
+mi.add_rule(antecedent = w1, consequent = jump)
+
+
 
 # Inicializa o pygame
 pygame.init()
@@ -74,10 +93,18 @@ def main():
         screen.fill(WHITE)
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if len(cactus_list) < 2:
+                if len(cactus_list) < 1:
+                    k = list(0,0)
+                else:
+                    k = list(cactus_list[0], 1)
+            else:
+                k = list(cactus_list[0], cactus_list[1])
+
+            if mi.infer(k, np.linspace(0, 100, 500)) or event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
+                
             if event.type == pygame.KEYDOWN:
                 if not game_is_over:
                     if event.key == pygame.K_UP and not is_jumping:
