@@ -132,7 +132,18 @@ plt.plot(x, b.mu(x), label="Cauchy Fuzzy Set (b)", color="blue")
 
 ![CauchyFuzzyNumber](./image/cauchyset.png)
 
-## Tnorm and Tconorm
+## Fuzzy Operations (Tnorm and Tconorm)
+
+Having two or more Fuzzy sets, it is possible to do set operations similar to the classic set operations Intersection and Union. For such, we have the Tnorm and Tconorm, respectively.
+
+**Tconorms and Tnorms available**
+|Name| Tnorm(A, B)  | Tconorm(A, B) |
+| ------------- | ------------- |:-------------:|
+|minimum| $$min(A, B)$$     | $$max(A, B)$$     |
+|product| $$A \cdot B$$      | $$A+B - (A \cdot B)$$     |
+|lukasiewicz| $$max(0, A+B-1)$$      | $$min(1, A+B)$$     |
+| drastic      | B if A = 1; A if B = 1; 0 otherwise | B if A = 0; A if B = 0; 1 otherwise |
+
 **Example**
 
 ```python
