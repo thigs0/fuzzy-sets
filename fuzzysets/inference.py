@@ -71,9 +71,7 @@ class MamdaniInference:
         output_membership = np.zeros_like(universe)
 
         for antecedent, consequent in self.rules:
-            
             degree = antecedent(input_value)  # grau de ativação
-            # Min (t-norma) entre grau da regra e a saída fuzzy
             consequent_values = np.array([consequent.mu(x) for x in universe])
             output_membership = np.fmax(output_membership, np.fmin(degree, consequent_values))
 

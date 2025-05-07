@@ -108,7 +108,7 @@ class TriangularFuzzyNumber:
         elif x > self.__n and x < self.__r:
             return -(self.__r - x)/(self.__l - self.__n)
         else:
-            0
+            return 0
 
     def __add__(self, other: "TriangularFuzzyNumber") -> "TriangularFuzzyNumber":
         return self.__operation(other, op_name="_add")
