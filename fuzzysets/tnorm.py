@@ -1,7 +1,7 @@
 import numpy as np
 from numpy import inf, minimum
 
-def AND(fuzzy:list):
+def AND(fuzzy:list): 
     def out(variables:list):
         v = inf
         for i in range(len(variables)):
