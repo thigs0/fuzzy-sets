@@ -4,7 +4,12 @@ import time
 import random
 import pygame
 import numpy as np
-from fuzzysets import TriangularFuzzyNumber, AND, MamdaniInference, TakagiSugenoInference
+from fuzzysets import TriangularFuzzyNumber, AND, MamdaniInference, TakagiSugenoInference, Surface
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
 
 # ——— Configurações Fuzzy —————————————————————————————————————————————
 #fcactus_near = TriangularFuzzyNumber(r=210, n=100, l=90)
@@ -26,9 +31,6 @@ vel_high = TriangularFuzzyNumber(r=12, n=9, l=6.999)
 def jump_zero(x):return 0
 def jump_low(x): return 0.4
 def jump_high(x): return 1
-
-
-
 
 #rules for x = distance:
 #w1 = AND([dist_low,dist_low])
@@ -58,13 +60,22 @@ mi = TakagiSugenoInference()
 #mi.add_rule(antecedent=w2, consequent=jump_high)
 #mi.add_rule(antecedent=w3, consequent=jump_zero)
 #rules for x1 = distance; x2 = velocity
-mi.add_rule(antecedent=w1, consequent=jump_low)
-mi.add_rule(antecedent=w2, consequent=jump_high)
-mi.add_rule(antecedent=w3, consequent=jump_zero)
-mi.add_rule(antecedent=w4, consequent=jump_high)
-mi.add_rule(antecedent=w5, consequent=jump_high)
-mi.add_rule(antecedent=w6, consequent=jump_zero)
 
+mi.add_rule(antecedent=w1, consequent=jump_high)
+mi.add_rule(antecedent=w2, consequent=jump_zero)
+#mi.add_rule(antecedent=w3, consequent=jump_zero)
+#mi.add_rule(antecedent=w4, consequent=jump_high)
+#mi.add_rule(antecedent=w5, consequent=jump_high)
+#mi.add_rule(antecedent=w6, consequent=jump_zero)
+
+#Surface(mi, np.linspace(0, 1, 100), np.linspace(6, 8, 100), np.linspace(0,100,500), "out.png")
+
+#------------------------------------------------------------------------
+#criando variáveis para o gráfico
+out_graph = np.zeros([5000, 3])# número de pontos analisados, x, y
+N = 0
+
+#-----------------------------------------------------------------------
 # ——— Inicializa Pygame e Tela ——————————————————————————————————————————
 pygame.init()
 WIDTH, HEIGHT = 800, 400
@@ -170,7 +181,7 @@ def main():
     global cactus_speed, score, cactus_list
     global last_cactus_time, last_cloud_time, last_increase_time
     global cloud_list, bg_x
-
+    N = 0
     running      = True
     game_is_over = False
 
@@ -263,6 +274,11 @@ def main():
             print(norm_dist)
             #velocidade: cactus_speed
             fuzzy_value = mi.infer([norm_dist,cactus_speed], np.linspace(0, 100, 500))
+
+            out_graph[N,:] = np.array([N, norm_dist, cactus_speed])
+            N+=1
+
+            print(norm_dist, cactus_speed)
             if fuzzy_value > 0.0001 and not is_jumping:
                 dino_vel_y = -15*fuzzy_value if 15*fuzzy_value > 15 else -15
                 is_jumping = True
@@ -296,6 +312,11 @@ def main():
 
         else:
             game_over()
+            #ax = Surface(mi, np.linspace(0, 1, 100), np.linspace(6, 8, 100), np.linspace(0,100,500), "out.png")
+            for i in range(N):
+                print(out_graph[i, 1], out_graph[i, 2])
+                ax.scatter(out_graph[i, 1], out_graph[i, 2], 0, color='black')
+                plt.savefig(f'out/out{i}.png')
 
         pygame.display.update()
 
