@@ -1,5 +1,5 @@
 import numpy as np
-from fuzzysets import CauchyFuzzySet
+from fuzzysets import CauchyFuzzySet, TriangularFuzzyNumber
 from typing import Callable, List, Dict, Tuple
 
 class TakagiSugenoInference:
@@ -29,19 +29,25 @@ class TakagiSugenoInference:
         :param resolution: número de pontos para amostragem na saída
         :return: valor defuzzificado (saída)
         """
-
+        
         output_membership = np.zeros_like(universe)
 
-        consequent_values = np.array([consequent(*input_value)])
-        W = np.zeros(len(consequent_values))
-        k=0
+        consequents = []
+        weights = []
+
         for antecedent, consequent in self.rules:
-            W[k] = antecedent(input_value)  # grau de ativação
-            k+=1
-        # Defuzzificação: centroide
-        numerator = np.dot(consequent_values, W)
-        W2 = np.dot(W, W)
-        return numerator/W2
+            w = antecedent(input_value)  # Grau de ativação
+            y = consequent(input_value)  # Saída da função consequente
+            weights.append(w)
+            consequents.append(y)
+
+        numerator = np.dot(consequents, weights)
+        denominator = np.sum(weights)
+
+        if denominator == 0:
+            return 0.0
+
+        return numerator / denominator
 
 class MamdaniInference:
     """
@@ -69,6 +75,9 @@ class MamdaniInference:
         """
 
         output_membership = np.zeros_like(universe)
+        #print("o input: ",len(input_value))
+        #print("o antecedente: ",len(self.rules[0]))
+        #if len(input_value) != len(self.rules[0]): raise Exception("Error: dimension rule needs to be the same")
 
         for antecedent, consequent in self.rules:
             degree = antecedent(input_value)  # grau de ativação
