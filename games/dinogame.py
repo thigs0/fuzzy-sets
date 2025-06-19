@@ -4,78 +4,79 @@ import time
 import random
 import pygame
 import numpy as np
-from fuzzysets import TriangularFuzzyNumber, AND, MamdaniInference, TakagiSugenoInference, Surface
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-
-fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
+from fuzzysets import TriangularFuzzyNumber, AND, MamdaniInference, TakagiSugenoInference, CauchyFuzzySet
 
 # ——— Configurações Fuzzy —————————————————————————————————————————————
 #fcactus_near = TriangularFuzzyNumber(r=210, n=100, l=90)
-dist_low = TriangularFuzzyNumber(r=0.003, n=0, l=-1)
-dist_med = TriangularFuzzyNumber(r=0.08, n=0.05, l=0.02)
-dist_high = TriangularFuzzyNumber(r=1, n=0.5, l=0.07)
+dist_low = TriangularFuzzyNumber(r=0.17, n=0.1, l=0)
+dist_high = TriangularFuzzyNumber(r=1, n=0.5, l=0.1)
+
+
 
 vel_low = TriangularFuzzyNumber(r=7, n=6, l=5)
 vel_high = TriangularFuzzyNumber(r=12, n=9, l=6.999)
 
+vel_low = CauchyFuzzySet(0.5, 8, 8.5)
+vel_high = CauchyFuzzySet(2, 10, 11)
+
 #scactus_near = TriangularFuzzyNumber(r=900, n=300, l=90)
 
 #Mamdani Method Fuzzy results:
-#jump_zero     = TriangularFuzzyNumber(r=0.0001,   n=0,   l=-1)
-#jump_low      = TriangularFuzzyNumber(r=0.801,   n=0.8,   l=0)
-#jump_high     = TriangularFuzzyNumber(r=1,   n=0.9,   l=0.8)
+jump_zero     = TriangularFuzzyNumber(r=0.0001,   n=0,   l=-1)
+jump_low      = TriangularFuzzyNumber(r=0.401,   n=0.4,   l=0)
+jump_high     = TriangularFuzzyNumber(r=1,   n=0.9,   l=0.8)
 
 #functions for Takagi-Sugeno Method:
-def jump_zero(x):return 0
-def jump_low(x): return 0.4
-def jump_high(x): return 1
+#def jump_zero(x):return 0
+#def jump_low(x): return 0.4
+#def jump_high(x): return 1
+
+
+
 
 #rules for x = distance:
 #w1 = AND([dist_low,dist_low])
-#w2 = AND([dist_med,dist_med])
-#w3 = AND([dist_high,dist_high])
+#w2 = AND([dist_high,dist_high])
 
 #rules for x1 = distance; x2 = velocity
 w1 = AND([dist_low,vel_low])
-w2 = AND([dist_med,vel_low])
-w3 = AND([dist_high,vel_low])
-w4 = AND([dist_low,vel_high])
-w5 = AND([dist_med,vel_high])
-w6 = AND([dist_high,vel_high])
+w2 = AND([dist_high,vel_low])
+w3 = AND([dist_low,vel_high])
+w4 = AND([dist_high,vel_high])
+
+#w1 = AND([dist_low,vel_low])
+#w2 = AND([dist_med,vel_low])
+#w3 = AND([dist_high,vel_low])
+#w4 = AND([dist_low,vel_high])
+#w5 = AND([dist_med,vel_high])
+#w6 = AND([dist_high,vel_high])
 
 
 #w1 = AND([fcactus_near, player_vel])
 
 #Mamdani method:
-#mi = MamdaniInference()
+mi = MamdaniInference()
 
 #Takagi-Sugeno method:
-mi = TakagiSugenoInference()
+#mi = TakagiSugenoInference()
 
 
 #rules for x = distance:
+#mi.add_rule(antecedent=w1, consequent=jump_high)
+#mi.add_rule(antecedent=w2, consequent=jump_zero)
+#rules for x1 = distance; x2 = velocity
+mi.add_rule(antecedent=w1, consequent=jump_low)
+mi.add_rule(antecedent=w2, consequent=jump_zero)
+mi.add_rule(antecedent=w3, consequent=jump_high)
+mi.add_rule(antecedent=w4, consequent=jump_zero)
+
 #mi.add_rule(antecedent=w1, consequent=jump_low)
 #mi.add_rule(antecedent=w2, consequent=jump_high)
-#mi.add_rule(antecedent=w3, consequent=jump_zero)
-#rules for x1 = distance; x2 = velocity
-
-mi.add_rule(antecedent=w1, consequent=jump_high)
-mi.add_rule(antecedent=w2, consequent=jump_zero)
 #mi.add_rule(antecedent=w3, consequent=jump_zero)
 #mi.add_rule(antecedent=w4, consequent=jump_high)
 #mi.add_rule(antecedent=w5, consequent=jump_high)
 #mi.add_rule(antecedent=w6, consequent=jump_zero)
 
-#Surface(mi, np.linspace(0, 1, 100), np.linspace(6, 8, 100), np.linspace(0,100,500), "out.png")
-
-#------------------------------------------------------------------------
-#criando variáveis para o gráfico
-out_graph = np.zeros([5000, 3])# número de pontos analisados, x, y
-N = 0
-
-#-----------------------------------------------------------------------
 # ——— Inicializa Pygame e Tela ——————————————————————————————————————————
 pygame.init()
 WIDTH, HEIGHT = 800, 400
@@ -102,11 +103,6 @@ dino_run = [
     get_image((1603, 0, 89, 94)),  # Char 2
 ]
 
-# Ajuste conforme necessário se os sprites de "agachar" estiverem em outro lugar
-dino_duck = [
-    get_image((1700, 0, 118, 60)),  # Exemplo, ajustar se inválido
-    get_image((1820, 0, 118, 60)),
-]
 
 # Cactos pequenos e grandes (baseado no offset que você usou no JS: 446 e 652)
 cactus_imgs = [
@@ -116,7 +112,7 @@ cactus_imgs = [
 ]
 
 # Nuvem (posição presumida, ajustar se necessário)
-cloud_img = get_image((0, 50, 46, 14))  # Dentro de 130px
+cloud_img = get_image((166, 0, 95, 40))  # Dentro de 130px
 
 # Background (chão): de y = 104 até 122
 sw, sh = sprite_sheet.get_size()
@@ -133,7 +129,6 @@ dino_y     = HEIGHT - dino_run[0].get_height() - 40
 dino_vel_y = 0
 gravity    = 0.8
 is_jumping = False
-is_ducking = False
 dino_frame = 0
 
 bg_x = 0
@@ -158,7 +153,7 @@ def draw_background(x):
 
 def draw_dino():
     global dino_frame
-    seq = dino_duck if is_ducking else dino_run
+    seq = dino_run
     img = seq[(dino_frame // 5) % len(seq)]
     screen.blit(img, (dino_x, dino_y))
     dino_frame += 1
@@ -177,11 +172,11 @@ cactus_list = []  # cada item será (x, img)
 
 # ——— Alterações no loop principal ———————————————————————
 def main():
-    global dino_y, dino_vel_y, is_jumping, is_ducking
+    global dino_y, dino_vel_y, is_jumping
     global cactus_speed, score, cactus_list
     global last_cactus_time, last_cloud_time, last_increase_time
     global cloud_list, bg_x
-    N = 0
+
     running      = True
     game_is_over = False
 
@@ -196,25 +191,24 @@ def main():
                 sys.exit()
             if e.type == pygame.KEYDOWN:
                 if not game_is_over and e.key == pygame.K_DOWN:
-                    is_ducking = True
                     if is_jumping:
                         is_jumping = False
                         dino_vel_y = 0
-                        dino_y     = HEIGHT - dino_duck[0].get_height() - 40
+                        dino_y     = HEIGHT - 40
                 if game_is_over and e.key == pygame.K_r:
                     cactus_list        = []
                     cloud_list         = []
                     cactus_speed       = 6
                     score              = 0
-                    is_jumping = is_ducking = False
+                    is_jumping = False
                     dino_y             = HEIGHT - dino_run[0].get_height() - 40
                     dino_vel_y         = 0
                     last_cactus_time   = pygame.time.get_ticks()
                     last_cloud_time    = pygame.time.get_ticks()
                     last_increase_time = time.time()
                     game_is_over       = False
-            if e.type == pygame.KEYUP and e.key == pygame.K_DOWN:
-                is_ducking = False
+            #if e.type == pygame.KEYUP and e.key == pygame.K_DOWN:
+            #    is_ducking = False
 
         if not game_is_over:
             # Aumenta dificuldade
@@ -227,7 +221,7 @@ def main():
             if is_jumping:
                 dino_y     += dino_vel_y
                 dino_vel_y += gravity
-            floor_y = HEIGHT - (dino_duck[0].get_height() if is_ducking else dino_run[0].get_height()) - 40
+            floor_y = HEIGHT - (dino_run[0].get_height()) - 40
             if dino_y >= floor_y:
                 dino_y     = floor_y
                 is_jumping = False
@@ -247,7 +241,9 @@ def main():
 
             # Spawn de nuvens
             if now - last_cloud_time > cloud_spawn_delay:
-                cloud_list.append(WIDTH + random.randint(0,200))
+                cloud_x = WIDTH + random.randint(0, 200)
+                cloud_y = random.randint(50, 150)
+                cloud_list.append((cloud_x, cloud_y))
                 last_cloud_time = now
 
             # Move e filtra obstáculos
@@ -258,30 +254,35 @@ def main():
                     new_cactus_list.append((x, img))
             cactus_list = new_cactus_list
 
-            cloud_list = [x - (cactus_speed // 2) for x in cloud_list if x > -100]
+            new_cloud_list = []
+            for x, y in cloud_list:
+                x -= cactus_speed // 2
+                if x > -100:
+                    new_cloud_list.append((x, y))
+            cloud_list = new_cloud_list
 
             # Inferência Fuzzy e Pulo Automático
             # Considera apenas a distância horizontal do cacto mais próximo ao Dino
-            if cactus_list:
-                nearest_dist = cactus_list[0][0] - (dino_x + dino_run[0].get_width())
-            else:
-                nearest_dist = WIDTH  # nenhum cacto na tela
-            if nearest_dist < 0:
-                nearest_dist = 0
+            nearest_dist = WIDTH
+            for cactus in cactus_list:
+                cactus_x = cactus[0]
+                cactus_width = cactus_img.get_width()
+                if cactus_x + cactus_width > dino_x:  # obstáculo ainda está à frente
+                    dist = cactus_x - dino_x
+                if dist < nearest_dist:
+                    nearest_dist = dist
             #print(nearest_dist)
             #Distância normalizada:
             norm_dist = nearest_dist / WIDTH
-            print(norm_dist)
             #velocidade: cactus_speed
+            #fuzzy_value = mi.infer([norm_dist], np.linspace(0, 100, 500))
             fuzzy_value = mi.infer([norm_dist,cactus_speed], np.linspace(0, 100, 500))
-
-            out_graph[N,:] = np.array([N, norm_dist, cactus_speed])
-            N+=1
-
-            print(norm_dist, cactus_speed)
             if fuzzy_value > 0.0001 and not is_jumping:
                 dino_vel_y = -15*fuzzy_value if 15*fuzzy_value > 15 else -15
                 is_jumping = True
+            #if (norm_dist < 0.17 and not is_jumping):
+            #    dino_vel_y = -15
+            #    is_jumping = True
 
             # Desenho
             draw_background(bg_x)
@@ -295,13 +296,18 @@ def main():
                 dino_rect = pygame.Rect(
                     dino_x, dino_y,
                     dino_run[0].get_width(),
-                    dino_duck[0].get_height() if is_ducking else dino_run[0].get_height()
+                    dino_run[0].get_height()
                 )
                 if dino_rect.colliderect(rect):
                     game_is_over = True
 
-            for cx in cloud_list:
-                screen.blit(cloud_img, (cx, random.randint(50,150)))
+            new_cloud_list = []
+            for cx, cy in cloud_list:
+                cx -= cactus_speed // 2  # move mais devagar que cactos
+                if cx > -100:
+                    new_cloud_list.append((cx, cy))
+                    screen.blit(cloud_img, (cx, cy))
+            cloud_list = new_cloud_list
 
             draw_dino()
 
@@ -312,13 +318,9 @@ def main():
 
         else:
             game_over()
-            #ax = Surface(mi, np.linspace(0, 1, 100), np.linspace(6, 8, 100), np.linspace(0,100,500), "out.png")
-            for i in range(N):
-                print(out_graph[i, 1], out_graph[i, 2])
-                ax.scatter(out_graph[i, 1], out_graph[i, 2], 0, color='black')
-                plt.savefig(f'out/out{i}.png')
+            return score
 
         pygame.display.update()
 
 if __name__ == "__main__":
-    main()
+    print(main())
