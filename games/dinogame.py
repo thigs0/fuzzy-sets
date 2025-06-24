@@ -4,22 +4,28 @@ import time
 import random
 import pygame
 import numpy as np
-from fuzzysets import TriangularFuzzyNumber, AND, MamdaniInference, TakagiSugenoInference
+from fuzzysets import TriangularFuzzyNumber, AND, MamdaniInference, TakagiSugenoInference, Surface
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
 
 # ——— Configurações Fuzzy —————————————————————————————————————————————
 #fcactus_near = TriangularFuzzyNumber(r=210, n=100, l=90)
-dist_low = TriangularFuzzyNumber(r=0.17, n=0.085, l=0)
-dist_high = TriangularFuzzyNumber(r=1, n=0.55, l=0.1)
+dist_low = TriangularFuzzyNumber(r=0.003, n=0, l=-1)
+dist_med = TriangularFuzzyNumber(r=0.08, n=0.05, l=0.02)
+dist_high = TriangularFuzzyNumber(r=1, n=0.5, l=0.07)
 
-#vel_low = TriangularFuzzyNumber(r=7, n=6, l=5)
-#vel_high = TriangularFuzzyNumber(r=12, n=9, l=6.999)
+vel_low = TriangularFuzzyNumber(r=7, n=6, l=5)
+vel_high = TriangularFuzzyNumber(r=12, n=9, l=6.999)
 
 #scactus_near = TriangularFuzzyNumber(r=900, n=300, l=90)
 
 #Mamdani Method Fuzzy results:
-jump_zero     = TriangularFuzzyNumber(r=0.0001,   n=0,   l=-0.0001)
-jump_low      = TriangularFuzzyNumber(r=0.401,   n=0.2005,   l=0)
-jump_high     = TriangularFuzzyNumber(r=1,   n=0.9,   l=0.8)
+#jump_zero     = TriangularFuzzyNumber(r=0.0001,   n=0,   l=-1)
+#jump_low      = TriangularFuzzyNumber(r=0.801,   n=0.8,   l=0)
+#jump_high     = TriangularFuzzyNumber(r=1,   n=0.9,   l=0.8)
 
 #functions for Takagi-Sugeno Method:
 #def jump_zero(x):return 0
@@ -30,23 +36,20 @@ jump_high     = TriangularFuzzyNumber(r=1,   n=0.9,   l=0.8)
 
 
 #rules for x = distance:
-w1 = AND([dist_low,dist_low])
-w2 = AND([dist_high,dist_high])
+#w1 = AND([dist_low,dist_low])
+#w2 = AND([dist_med,dist_med])
+#w3 = AND([dist_high,dist_high])
 
 #rules for x1 = distance; x2 = velocity
-#w1 = AND([dist_low,vel_low])
-#w2 = AND([dist_high,vel_low])
-#w3 = AND([dist_low,vel_high])
-#w4 = AND([dist_high,vel_high])
-
-#w1 = AND([dist_low,vel_low])
-#w2 = AND([dist_med,vel_low])
-#w3 = AND([dist_high,vel_low])
-#w4 = AND([dist_low,vel_high])
-#w5 = AND([dist_med,vel_high])
-#w6 = AND([dist_high,vel_high])
+w1 = AND([dist_low,vel_low])
+w2 = AND([dist_med,vel_low])
+w3 = AND([dist_high,vel_low])
+w4 = AND([dist_low,vel_high])
+w5 = AND([dist_med,vel_high])
+w6 = AND([dist_high,vel_high])
 
 
+#w1 = AND([fcactus_near, player_vel])
 
 #Mamdani method:
 mi = MamdaniInference()
@@ -56,14 +59,6 @@ mi = MamdaniInference()
 
 
 #rules for x = distance:
-mi.add_rule(antecedent=w1, consequent=jump_high)
-mi.add_rule(antecedent=w2, consequent=jump_zero)
-#rules for x1 = distance; x2 = velocity
-#mi.add_rule(antecedent=w1, consequent=jump_low)
-#mi.add_rule(antecedent=w2, consequent=jump_zero)
-#mi.add_rule(antecedent=w3, consequent=jump_high)
-#mi.add_rule(antecedent=w4, consequent=jump_zero)
-
 #mi.add_rule(antecedent=w1, consequent=jump_low)
 #mi.add_rule(antecedent=w2, consequent=jump_high)
 #mi.add_rule(antecedent=w3, consequent=jump_zero)
@@ -268,10 +263,13 @@ def main():
             #print(nearest_dist)
             #Distância normalizada:
             norm_dist = nearest_dist / WIDTH
-            print(norm_dist)
             #velocidade: cactus_speed
-            fuzzy_value = mi.infer([norm_dist], np.linspace(0, 100, 500))
-            #fuzzy_value = mi.infer([norm_dist,cactus_speed], np.linspace(0, 100, 500))
+            fuzzy_value = mi.infer([norm_dist,cactus_speed], np.linspace(0, 100, 500))
+
+            out_graph[N,:] = np.array([N, norm_dist, cactus_speed])
+            N+=1
+
+            print(norm_dist, cactus_speed)
             if fuzzy_value > 0.0001 and not is_jumping:
                 dino_vel_y = -15*fuzzy_value if 15*fuzzy_value > 15 else -15
                 is_jumping = True
@@ -313,8 +311,13 @@ def main():
 
         else:
             game_over()
+            #ax = Surface(mi, np.linspace(0, 1, 100), np.linspace(6, 8, 100), np.linspace(0,100,500), "out.png")
+            for i in range(N):
+                print(out_graph[i, 1], out_graph[i, 2])
+                ax.scatter(out_graph[i, 1], out_graph[i, 2], 0, color='black')
+                plt.savefig(f'out/out{i}.png')
 
         pygame.display.update()
 
 if __name__ == "__main__":
-    main()
+    print(main())
